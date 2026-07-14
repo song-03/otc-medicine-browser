@@ -1,0 +1,2621 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>일반의약품 검색 사전</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f8fb;
+      --paper: #ffffff;
+      --paper-soft: #f9fbff;
+      --ink: #172033;
+      --muted: #667085;
+      --line: #d9e1ef;
+      --line-soft: #edf1f7;
+      --brand: #2454d6;
+      --brand-dark: #163b9c;
+      --brand-soft: #eaf0ff;
+      --good: #087f5b;
+      --warn: #b54708;
+      --danger: #b42318;
+      --shadow: 0 18px 60px rgba(22, 35, 64, 0.11);
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --radius-sm: 10px;
+      --focus: 0 0 0 4px rgba(36, 84, 214, 0.17);
+      --font-ui: "NanumBarunGothic", "Nanum Barun Gothic", "NanumBarun Gothic", "NanumGothic", "Nanum Gothic", "Noto Sans KR", "Apple SD Gothic Neo", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(36, 84, 214, 0.13), transparent 34rem),
+        radial-gradient(circle at top right, rgba(8, 127, 91, 0.10), transparent 30rem),
+        var(--bg);
+      color: var(--ink);
+      font-family: var(--font-ui);
+      line-height: 1.55;
+    }
+
+    a { color: var(--brand); }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    summary:focus-visible {
+      outline: none;
+      box-shadow: var(--focus);
+    }
+
+    .app {
+      width: min(1440px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 48px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.74);
+      border-radius: 30px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.94), rgba(245,248,255,0.88)),
+        var(--paper);
+      box-shadow: var(--shadow);
+      padding: clamp(24px, 5vw, 46px);
+      margin-bottom: 18px;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -80px -120px auto;
+      width: 320px;
+      height: 320px;
+      border-radius: 999px;
+      background: rgba(36, 84, 214, 0.08);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.8);
+      color: var(--brand-dark);
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--brand);
+    }
+
+    .hero > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-title-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(390px, 470px);
+      align-items: start;
+      gap: clamp(18px, 3vw, 34px);
+      margin-top: 18px;
+    }
+
+    .hero-copy {
+      min-width: 0;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2rem, 5vw, 4.1rem);
+      letter-spacing: -0.06em;
+      line-height: 1.05;
+    }
+
+    .hero p {
+      max-width: 900px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.03rem;
+    }
+
+    .space-tabs {
+      border: 1px solid #d9e7f6;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: 0 12px 34px rgba(22, 35, 64, 0.08);
+      padding: 13px;
+    }
+
+    .space-tabs-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .space-tabs-head strong {
+      color: #172033;
+      font-size: 1rem;
+      font-weight: 950;
+      letter-spacing: -0.03em;
+    }
+
+    .space-head-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .space-clear {
+      min-height: 30px;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      color: #344054;
+      font-size: 0.78rem;
+      font-weight: 950;
+    }
+
+    .space-clear.active,
+    .space-clear:hover {
+      border-color: var(--brand);
+      background: var(--brand-soft);
+      color: var(--brand-dark);
+    }
+
+    .space-selected {
+      margin-bottom: 10px;
+      color: var(--muted);
+      font-size: 0.83rem;
+      font-weight: 850;
+    }
+
+    .space-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 44px minmax(0, 1fr);
+      gap: 6px;
+      align-items: stretch;
+    }
+
+    .space-shelf-title {
+      margin-bottom: 4px;
+      color: #344054;
+      font-size: 0.72rem;
+      font-weight: 950;
+      text-align: center;
+    }
+
+    .space-slot-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 3px;
+    }
+
+    .space-slot,
+    .space-lower-slot {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      min-height: 25px;
+      border: 1px solid #cfd8ea;
+      border-radius: 7px;
+      background: #fff;
+      color: #344054;
+      font-size: 0.7rem;
+      font-weight: 950;
+      line-height: 1;
+      white-space: nowrap;
+      transition: transform 0.14s ease, background 0.14s ease, border-color 0.14s ease;
+    }
+
+    .space-slot em,
+    .space-lower-slot em {
+      color: #667085;
+      font-style: normal;
+      font-size: 0.62rem;
+      font-weight: 850;
+    }
+
+    .space-slot:hover,
+    .space-lower-slot:hover {
+      transform: translateY(-1px);
+      border-color: var(--brand);
+      background: var(--brand-soft);
+      color: var(--brand-dark);
+    }
+
+    .space-slot.active,
+    .space-lower-slot.active {
+      border-color: var(--brand);
+      background: var(--brand);
+      color: #fff;
+      box-shadow: 0 0 0 3px rgba(36, 84, 214, 0.16);
+    }
+
+    .space-slot.active em,
+    .space-lower-slot.active em {
+      color: rgba(255, 255, 255, 0.86);
+    }
+
+    .space-aisle {
+      display: grid;
+      place-items: center;
+      min-height: 100%;
+      border: 1px dashed #c8d3e7;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.68);
+      color: #344054;
+      font-size: 0.72rem;
+      font-weight: 950;
+      letter-spacing: 0.02em;
+    }
+
+    .space-lower-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 3px;
+      width: calc((100% - 56px) / 2);
+      min-width: 150px;
+      margin-top: 7px;
+    }
+
+    .space-lower-slot {
+      min-height: 26px;
+      font-size: 0.72rem;
+    }
+
+    .space-lower-slot.stand {
+      grid-column: 1 / -1;
+    }
+
+    .space-slot,
+    .space-lower-slot {
+      position: relative;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      min-height: 50px;
+      padding: 7px 22px 7px 8px;
+      line-height: 1.08;
+      white-space: normal;
+      text-align: left;
+    }
+
+    .space-slot .space-code,
+    .space-lower-slot .space-code {
+      display: block;
+      color: inherit;
+      font-size: 0.72rem;
+      font-weight: 950;
+    }
+
+    .space-slot.has-alias,
+    .space-lower-slot.has-alias {
+      gap: 1px;
+      min-height: 56px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+    }
+
+    .space-slot.has-alias .space-code,
+    .space-lower-slot.has-alias .space-code {
+      order: 2;
+      color: #667085;
+      font-size: 0.52rem;
+      font-weight: 850;
+      letter-spacing: 0.01em;
+    }
+
+    .space-slot .space-alias,
+    .space-lower-slot .space-alias {
+      display: -webkit-box;
+      order: 1;
+      max-width: 100%;
+      overflow: hidden;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      color: #172033;
+      font-size: 0.96rem;
+      font-weight: 950;
+      line-height: 1.12;
+      letter-spacing: -0.055em;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+
+    .space-slot em,
+    .space-lower-slot em {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      padding: 1px 4px;
+      border-radius: 999px;
+      background: #f2f4f7;
+      line-height: 1.1;
+    }
+
+    .space-slot.active .space-alias,
+    .space-lower-slot.active .space-alias {
+      color: #ffffff;
+    }
+
+    .space-slot.active.has-alias .space-code,
+    .space-lower-slot.active.has-alias .space-code {
+      color: rgba(255, 255, 255, 0.78);
+    }
+
+    .space-slot.active em,
+    .space-lower-slot.active em {
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    .hero-actions,
+    .toolbar-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .btn,
+    .link-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 10px 15px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--paper);
+      color: var(--ink);
+      text-decoration: none;
+      font-weight: 800;
+      transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+    }
+
+    .btn:hover,
+    .link-btn:hover {
+      transform: translateY(-1px);
+      border-color: #b8c6e3;
+      background: #f8faff;
+    }
+
+    .btn.primary,
+    .link-btn.primary {
+      background: var(--brand);
+      border-color: var(--brand);
+      color: #fff;
+    }
+
+    .btn.primary:hover,
+    .link-btn.primary:hover {
+      background: var(--brand-dark);
+    }
+
+    .btn.ghost { background: transparent; }
+
+    .status-card,
+    .controls,
+    .summary,
+    .message,
+    .empty-state {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: rgba(255,255,255,0.88);
+      box-shadow: 0 8px 28px rgba(22, 35, 64, 0.06);
+    }
+
+    .status-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 14px 18px;
+      margin-bottom: 18px;
+    }
+
+    .status-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .status-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: var(--muted);
+      flex: 0 0 auto;
+    }
+
+    .status-dot.loading {
+      background: var(--brand);
+      animation: pulse 1s infinite alternate;
+    }
+
+    .status-dot.ok { background: var(--good); }
+    .status-dot.warn { background: var(--warn); }
+    .status-dot.error { background: var(--danger); }
+
+    @keyframes pulse {
+      from { transform: scale(0.88); opacity: 0.6; }
+      to { transform: scale(1.2); opacity: 1; }
+    }
+
+    .status-text {
+      font-weight: 900;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .status-meta {
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-align: right;
+    }
+
+    .controls {
+      padding: 18px;
+      margin-bottom: 18px;
+    }
+
+    .search-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      align-items: end;
+    }
+
+    .field-label {
+      display: grid;
+      gap: 7px;
+      color: #344054;
+      font-size: 0.92rem;
+      font-weight: 900;
+    }
+
+    .search-input,
+    select {
+      width: 100%;
+      min-height: 46px;
+      border: 1px solid #cfd8ea;
+      border-radius: 14px;
+      background: #fff;
+      color: var(--ink);
+      padding: 11px 13px;
+    }
+
+    .search-input {
+      min-height: 56px;
+      padding-left: 16px;
+      font-size: 1.08rem;
+      font-weight: 800;
+    }
+
+    .control-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(130px, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .hints {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .hint-btn {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--paper-soft);
+      padding: 6px 10px;
+      color: #344054;
+      font-weight: 800;
+    }
+
+    .hint-btn:hover {
+      border-color: #b8c6e3;
+      background: var(--brand-soft);
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+      padding: 14px;
+      margin-bottom: 18px;
+    }
+
+    .metric {
+      min-height: 84px;
+      border: 1px solid var(--line-soft);
+      border-radius: var(--radius-md);
+      background: linear-gradient(180deg, #fff, #f9fbff);
+      padding: 13px;
+    }
+
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.86rem;
+      font-weight: 900;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 4px;
+      font-size: 1.75rem;
+      letter-spacing: -0.04em;
+    }
+
+    .message {
+      display: none;
+      padding: 14px 16px;
+      margin-bottom: 18px;
+      color: #344054;
+    }
+
+    .message.show { display: block; }
+    .message.warn { border-color: #fedf89; background: #fffbeb; }
+    .message.error { border-color: #fecdca; background: #fff5f5; }
+    .message.ok { border-color: #abefc6; background: #f3fff8; }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .drug-card {
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: rgba(255,255,255,0.96);
+      box-shadow: 0 8px 26px rgba(22, 35, 64, 0.07);
+      overflow: hidden;
+    }
+
+    .drug-card-header {
+      padding: 18px 18px 12px;
+      border-bottom: 1px solid var(--line-soft);
+      background: linear-gradient(180deg, #fff, #fbfdff);
+    }
+
+    .drug-card h2 {
+      margin: 0 0 10px;
+      font-size: 1.28rem;
+      line-height: 1.25;
+      letter-spacing: -0.04em;
+    }
+
+    .compact-drug-card {
+      min-height: auto;
+      border-color: #d9e7f6;
+      background: rgba(255, 255, 255, 0.98);
+      transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .compact-drug-card:hover {
+      transform: translateY(-2px);
+      border-color: #b8c6e3;
+      box-shadow: 0 14px 34px rgba(22, 35, 64, 0.11);
+    }
+
+    .compact-card-button {
+      width: 100%;
+      min-height: 128px;
+      padding: 16px;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      text-align: left;
+      display: grid;
+      gap: 10px;
+      align-content: start;
+    }
+
+    .compact-card-title-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .compact-card-title {
+      color: var(--ink);
+      font-size: 1.08rem;
+      font-weight: 950;
+      line-height: 1.25;
+      letter-spacing: -0.04em;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+
+    .compact-open-cue {
+      flex: 0 0 auto;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: var(--brand-soft);
+      color: var(--brand-dark);
+      font-size: 0.72rem;
+      font-weight: 950;
+      white-space: nowrap;
+    }
+
+    .compact-tags .tag {
+      font-size: 0.75rem;
+    }
+
+    .tags,
+    .active-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: flex-start;
+      max-width: 100%;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: var(--brand-soft);
+      color: var(--brand-dark);
+      font-size: 0.79rem;
+      font-weight: 900;
+      line-height: 1.35;
+      white-space: normal;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+
+    .tag.neutral {
+      background: #f2f4f7;
+      color: #475467;
+    }
+
+    .tag.good {
+      background: #ecfdf3;
+      color: #067647;
+    }
+
+    .tag.warn {
+      background: #fff6db;
+      color: #93370d;
+    }
+
+    .tag.component-tag {
+      border-radius: 12px;
+      padding-inline: 10px;
+    }
+
+    button.tag.component-toggle {
+      border: 0;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .component-toggle {
+      max-width: 100%;
+    }
+
+    .component-toggle.expanded {
+      border-radius: 14px;
+    }
+
+    .toggle-cue {
+      display: inline-flex;
+      align-items: center;
+      margin-left: 6px;
+      padding: 1px 6px;
+      border-radius: 999px;
+      background: rgba(147, 55, 13, 0.10);
+      color: #7a2e0e;
+      font-size: 0.68rem;
+      font-weight: 950;
+      white-space: nowrap;
+    }
+
+    .drug-card-body {
+      display: grid;
+      gap: 12px;
+      padding: 16px 18px 18px;
+    }
+
+    .info-block {
+      display: grid;
+      gap: 4px;
+    }
+
+    .info-block dt,
+    .detail-section h3 {
+      margin: 0;
+      color: #475467;
+      font-size: 0.82rem;
+      font-weight: 950;
+      letter-spacing: -0.01em;
+    }
+
+    .info-block dd {
+      margin: 0;
+      color: #1d2939;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+
+    .guide-box {
+      border-left: 4px solid var(--good);
+      border-radius: 14px;
+      background: #f3fff8;
+      padding: 12px 13px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .guide-box h3 {
+      margin: 0;
+      color: #075e45;
+      font-size: 0.86rem;
+      font-weight: 950;
+      letter-spacing: -0.01em;
+    }
+
+    .guide-sections {
+      display: grid;
+      gap: 10px;
+    }
+
+    .guide-part {
+      display: grid;
+      gap: 5px;
+    }
+
+    .guide-part strong {
+      display: inline-flex;
+      width: fit-content;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #dff8ea;
+      color: #075e45;
+      font-size: 0.76rem;
+      font-weight: 950;
+    }
+
+    .guide-list {
+      display: grid;
+      gap: 4px;
+      margin: 0;
+      padding-left: 1.15rem;
+      color: #1d2939;
+      line-height: 1.65;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+
+    .guide-list li {
+      padding-left: 2px;
+    }
+
+    .guide-more {
+      color: var(--muted);
+      font-weight: 900;
+      list-style: none;
+      margin-left: -1rem;
+    }
+
+    .guide-paragraph {
+      margin: 0;
+      color: #1d2939;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+
+    .detail-section.guidance-detail {
+      background: #f8fffb;
+    }
+
+    .card-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 2px;
+    }
+
+    .small-btn {
+      min-height: 36px;
+      padding: 7px 10px;
+      border-radius: 10px;
+      background: #f3f6fb;
+      color: #344054;
+      font-size: 0.88rem;
+      font-weight: 900;
+    }
+
+    .small-btn:hover {
+      background: var(--brand-soft);
+      color: var(--brand-dark);
+    }
+
+    .location-visual {
+      border: 1px solid #d9e7f6;
+      border-radius: 16px;
+      background: linear-gradient(180deg, #fbfdff, #f5faff);
+      padding: 10px;
+    }
+
+    .location-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .location-head span {
+      color: #475467;
+      font-size: 0.78rem;
+      font-weight: 950;
+    }
+
+    .location-head strong {
+      color: var(--brand-dark);
+      font-size: 0.86rem;
+      font-weight: 950;
+      text-align: right;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+
+    .location-map {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 42px minmax(0, 1fr);
+      gap: 6px;
+      align-items: stretch;
+    }
+
+    .shelf-title {
+      margin-bottom: 3px;
+      color: #344054;
+      font-size: 0.72rem;
+      font-weight: 950;
+      text-align: center;
+    }
+
+    .slot-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 2px;
+    }
+
+    .slot,
+    .lower-slot {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 20px;
+      border: 1px solid #cfd8ea;
+      border-radius: 5px;
+      background: #fff;
+      color: #667085;
+      font-size: 0.62rem;
+      font-weight: 800;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .slot.active,
+    .lower-slot.active {
+      border-color: var(--brand);
+      background: var(--brand);
+      color: #fff;
+      box-shadow: 0 0 0 2px rgba(36, 84, 214, 0.16);
+    }
+
+    .aisle {
+      display: grid;
+      place-items: center;
+      min-height: 100%;
+      border: 1px dashed #c8d3e7;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.68);
+      color: #344054;
+      font-size: 0.72rem;
+      font-weight: 950;
+    }
+
+    .lower-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 2px;
+      width: calc((100% - 54px) / 2);
+      min-width: 138px;
+      margin-top: 6px;
+    }
+
+    .lower-slot {
+      min-height: 22px;
+      font-size: 0.66rem;
+    }
+
+    .lower-slot.stand {
+      grid-column: 1 / -1;
+    }
+
+    mark {
+      padding: 0 2px;
+      border-radius: 4px;
+      background: #fff0a6;
+      color: inherit;
+    }
+
+    .empty-state {
+      padding: 34px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .empty-state strong {
+      display: block;
+      color: var(--ink);
+      font-size: 1.2rem;
+      margin-bottom: 6px;
+    }
+
+    dialog {
+      width: min(920px, calc(100% - 26px));
+      max-height: 86vh;
+      padding: 0;
+      border: 0;
+      border-radius: 24px;
+      box-shadow: 0 30px 90px rgba(22, 35, 64, 0.28);
+      overflow: hidden;
+    }
+
+    dialog::backdrop {
+      background: rgba(10, 18, 32, 0.46);
+      backdrop-filter: blur(4px);
+    }
+
+    .dialog-shell {
+      display: grid;
+      max-height: 86vh;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      background: #fff;
+    }
+
+    .dialog-header,
+    .dialog-footer {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--line-soft);
+      background: #fbfdff;
+    }
+
+    .dialog-footer {
+      border-top: 1px solid var(--line-soft);
+      border-bottom: 0;
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .dialog-header h2 {
+      margin: 0 0 8px;
+      font-size: 1.4rem;
+      letter-spacing: -0.04em;
+    }
+
+    .dialog-body {
+      overflow: auto;
+      padding: 18px 20px 22px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .alias-dialog-body {
+      gap: 16px;
+    }
+
+    .alias-help {
+      border: 1px solid #d9e7f6;
+      border-radius: 16px;
+      background: #f8fbff;
+      color: #344054;
+      padding: 12px 14px;
+      font-size: 0.92rem;
+      font-weight: 800;
+    }
+
+    .alias-editor-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .alias-field {
+      display: grid;
+      gap: 6px;
+      padding: 10px;
+      border: 1px solid var(--line-soft);
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    .alias-field span {
+      color: #344054;
+      font-size: 0.78rem;
+      font-weight: 950;
+    }
+
+    .alias-field input {
+      width: 100%;
+      min-height: 36px;
+      border: 1px solid #cfd8ea;
+      border-radius: 10px;
+      padding: 7px 9px;
+      color: var(--ink);
+    }
+
+    .dialog-header p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .detail-section {
+      border: 1px solid var(--line-soft);
+      border-radius: 16px;
+      background: #fff;
+      padding: 13px 14px;
+    }
+
+    .detail-section p {
+      margin: 6px 0 0;
+      white-space: pre-wrap;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 1160px) {
+      .hero-title-row {
+        grid-template-columns: 1fr;
+      }
+
+      .space-tabs {
+        max-width: 560px;
+      }
+
+      .cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .summary,
+      .control-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .alias-editor-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .app {
+        width: min(100% - 20px, 1440px);
+        padding-top: 12px;
+      }
+
+      .hero {
+        border-radius: 22px;
+        padding: 22px;
+      }
+
+      .summary,
+      .control-grid,
+      .cards,
+      .alias-editor-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .status-card {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .status-meta {
+        text-align: left;
+      }
+
+      .space-tabs {
+        max-width: none;
+      }
+
+      .space-layout,
+      .location-map {
+        grid-template-columns: minmax(0, 1fr) 38px minmax(0, 1fr);
+      }
+
+      .space-lower-grid,
+      .lower-grid {
+        width: 100%;
+      }
+    }
+
+    @media print {
+      body { background: #fff; }
+
+      .app {
+        width: 100%;
+        padding: 0;
+      }
+
+      .hero-actions,
+      .controls,
+      .status-card,
+      .message,
+      .toolbar-actions,
+      .card-actions,
+      dialog {
+        display: none !important;
+      }
+
+      .hero,
+      .drug-card,
+      .summary {
+        box-shadow: none;
+        border-color: #d0d5dd;
+      }
+
+      .cards {
+        display: block;
+      }
+
+      .drug-card {
+        break-inside: avoid;
+        margin: 0 0 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="hero">
+      <div class="eyebrow">약국실습 · 일반의약품 정리</div>
+      <div class="hero-title-row">
+        <div class="hero-copy">
+          <h1>일반의약품 검색 사전</h1>
+          <p>제품명, 성분, 제형, 효능효과, 용법용량, 특이사항, 복약지도, 분야, 공간, 동일성분의약품을 카드 형태로 검색하고 필터링할 수 있습니다. 오른쪽 공간 탭에서 위치를 누르면 해당 공간의 제품을 먼저 간단 카드로 모아보고, 카드를 눌러 상세 카드로 펼칠 수 있습니다.</p>
+        </div>
+        <aside class="space-tabs" aria-label="공간별 보기">
+          <div class="space-tabs-head">
+            <strong>공간 탭</strong>
+            <div class="space-head-actions">
+              <button class="space-clear" id="spaceAliasBtn" type="button">별명</button>
+              <button class="space-clear active" id="spaceClearBtn" type="button">전체</button>
+            </div>
+          </div>
+          <div class="space-selected" id="spaceSelectedText">전체 공간</div>
+          <div class="space-map" id="spaceMap"></div>
+        </aside>
+      </div>
+      <div class="hero-actions">
+        <a class="link-btn primary" id="sourceLink" href="https://docs.google.com/spreadsheets/d/12p8dvAbw-C4zBNNVBFb5GcX883aLpXYuK4bKsWrXZGE/edit?usp=sharing" target="_blank" rel="noopener">원본 구글시트 열기</a>
+        <button class="btn" id="refreshBtn" type="button">시트 새로고침</button>
+        <button class="btn" id="printBtn" type="button">인쇄/PDF</button>
+      </div>
+    </header>
+
+    <section class="status-card" aria-live="polite">
+      <div class="status-left">
+        <span class="status-dot loading" id="statusDot" aria-hidden="true"></span>
+        <div>
+          <div class="status-text" id="statusText">구글시트에서 데이터를 불러오는 중입니다.</div>
+          <div class="status-meta" id="statusDetail">공개 링크 또는 브라우저 로그인 상태에 따라 로드 여부가 달라질 수 있습니다.</div>
+        </div>
+      </div>
+      <div class="status-meta" id="lastLoaded">아직 불러오지 않음</div>
+    </section>
+
+    <section class="controls" aria-label="검색 및 필터">
+      <div class="search-row">
+        <label class="field-label" for="searchInput">
+          통합 검색
+          <input class="search-input" id="searchInput" type="search" autocomplete="off" placeholder="제품명·성분·효능효과·공간·복약지도 검색" />
+        </label>
+      </div>
+      <div class="hints" aria-label="검색 예시">
+        <span>검색 예시:</span>
+        <button class="hint-btn" type="button" data-query="성분:아세트아미노펜">성분:아세트아미노펜</button>
+        <button class="hint-btn" type="button" data-query="공간:1-7">공간:1-7</button>
+        <button class="hint-btn" type="button" data-query="분야:감기">분야:감기</button>
+        <button class="hint-btn" type="button" data-query="-카페인">-카페인 제외</button>
+      </div>
+      <div class="control-grid">
+        <label class="field-label" for="fieldFilter">
+          분야
+          <select id="fieldFilter"><option value="">전체</option></select>
+        </label>
+        <label class="field-label" for="formFilter">
+          제형
+          <select id="formFilter"><option value="">전체</option></select>
+        </label>
+        <label class="field-label" for="spaceFilter">
+          공간
+          <select id="spaceFilter"><option value="">전체</option></select>
+        </label>
+        <label class="field-label" for="guideFilter">
+          복약지도/특이사항
+          <select id="guideFilter">
+            <option value="">전체</option>
+            <option value="has">내용 있음</option>
+            <option value="empty">내용 없음</option>
+          </select>
+        </label>
+        <label class="field-label" for="sortSelect">
+          정렬
+          <select id="sortSelect">
+            <option value="name">제품명순</option>
+            <option value="field">분야 → 제품명</option>
+            <option value="component">성분 → 제품명</option>
+            <option value="form">제형 → 제품명</option>
+            <option value="space">공간 → 제품명</option>
+          </select>
+        </label>
+      </div>
+      <div class="toolbar-actions">
+        <button class="btn ghost" id="resetBtn" type="button">검색/필터 초기화</button>
+      </div>
+    </section>
+
+    <section class="summary" aria-label="요약">
+      <div class="metric"><span>전체 제품</span><strong id="totalCount">0</strong></div>
+      <div class="metric"><span>현재 결과</span><strong id="resultCount">0</strong></div>
+      <div class="metric"><span>분야 수</span><strong id="fieldCount">0</strong></div>
+      <div class="metric"><span>제형 수</span><strong id="formCount">0</strong></div>
+      <div class="metric"><span>공간 수</span><strong id="spaceCount">0</strong></div>
+    </section>
+
+    <div class="message" id="messageBar"></div>
+
+    <main>
+      <section class="cards" id="cardsView" aria-label="카드형 결과"></section>
+      <section class="empty-state hidden" id="emptyState">
+        <strong>검색 결과가 없습니다.</strong>
+        <span>검색어를 줄이거나 필터를 초기화해보세요.</span>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="detailDialog" aria-labelledby="dialogTitle">
+    <div class="dialog-shell">
+      <header class="dialog-header">
+        <h2 id="dialogTitle">제품 상세</h2>
+        <div class="tags" id="dialogTags"></div>
+      </header>
+      <div class="dialog-body" id="dialogBody"></div>
+      <footer class="dialog-footer">
+        <button class="btn primary" id="closeDialogBtn" type="button">닫기</button>
+      </footer>
+    </div>
+  </dialog>
+
+  <dialog id="aliasDialog" aria-labelledby="aliasDialogTitle">
+    <div class="dialog-shell">
+      <header class="dialog-header">
+        <h2 id="aliasDialogTitle">공간 별명 편집</h2>
+        <p>공간 번호 아래에 표시할 짧은 이름을 입력하세요. 예: 1-1 → 해열·진통제, 2-3 → 소화제.</p>
+      </header>
+      <div class="dialog-body alias-dialog-body">
+        <div class="alias-help">이 화면에서 저장한 별명은 현재 PC/브라우저에만 저장됩니다. 새로고침해도 유지되지만 다른 사람·다른 기기에는 보이지 않습니다. 모두에게 공유하려면 구글시트에 <strong>공간별명</strong> 열을 추가해 입력하세요. 예: <strong>1-1=해열·진통제</strong>, <strong>2-3=소화제</strong> 또는 공간이 1개인 행에 별명만 입력.</div>
+        <div class="alias-editor-grid" id="aliasEditor"></div>
+      </div>
+      <footer class="dialog-footer">
+        <button class="btn ghost" id="aliasResetBtn" type="button">입력값 비우기</button>
+        <button class="btn" id="closeAliasBtn" type="button">취소</button>
+        <button class="btn primary" id="saveAliasBtn" type="button">저장</button>
+      </footer>
+    </div>
+  </dialog>
+
+  <script>
+  (() => {
+    'use strict';
+
+    const DEFAULT_SHEET_URL = 'https://docs.google.com/spreadsheets/d/12p8dvAbw-C4zBNNVBFb5GcX883aLpXYuK4bKsWrXZGE/edit?usp=sharing';
+    const DEFAULT_SHEET_ID = '12p8dvAbw-C4zBNNVBFb5GcX883aLpXYuK4bKsWrXZGE';
+    const DEFAULT_GID = '0';
+    const EXPECTED_COLUMNS = ['제품명', '성분', '제형', '효능효과', '용법용량', '특이사항', '복약지도', '분야', '공간', '동일성분의약품', '공간별명'];
+    const COMPONENT_TAG_MAX = 54;
+    const SPACE_ALIAS_PRESETS = {
+      // 파일 자체에 기본 별명을 박아두고 싶으면 아래처럼 입력하세요.
+      // '1-1': '해열·진통제',
+      // '2-3': '소화제'
+    };
+    const COLUMN_ALIASES = {
+      '제품명': ['제품명', '상품명', '의약품명', '약품명', 'product', 'name'],
+      '성분': ['성분', '주성분', '성분명', 'component', 'ingredient'],
+      '제형': ['제형', '형태', 'form', 'dosage form'],
+      '효능효과': ['효능효과', '효능', '효과', '적응증', 'effect', 'indication'],
+      '용법용량': ['용법용량', '용법', '용량', '복용법', 'dose', 'dosage'],
+      '특이사항': ['특이사항', '주의사항', '주의', '비고', 'note', 'caution'],
+      '복약지도': ['복약지도', '복약', '상담', '지도', 'guide', 'counseling'],
+      '분야': ['분야', '카테고리', '분류', 'field', 'category'],
+      '공간': ['공간', '위치', '장소', '배치', '진열위치', '보관위치', 'location', 'space', 'shelf'],
+      '공간별명': ['공간별명', '공간 별명', '공간명', '위치별명', '위치 별명', '위치명', '진열명', '파트명', '별명', 'space alias', 'location alias', 'space name'],
+      '동일성분의약품': ['동일성분의약품', '동일성분', '동일 성분', '대체품', 'same', 'equivalent']
+    };
+
+    const aliasMap = new Map();
+    Object.entries(COLUMN_ALIASES).forEach(([column, aliases]) => {
+      aliases.concat(column).forEach(alias => aliasMap.set(normalizeKey(alias), column));
+    });
+
+    const params = new URLSearchParams(window.location.search);
+    const initialParsed = parseSheetUrl(params.get('sheet') || params.get('url') || DEFAULT_SHEET_URL);
+
+    const source = {
+      sheetId: params.get('sheetId') || initialParsed.sheetId || DEFAULT_SHEET_ID,
+      gid: params.get('gid') || initialParsed.gid || DEFAULT_GID,
+      url: params.get('sheet') || params.get('url') || DEFAULT_SHEET_URL
+    };
+
+    const state = {
+      rows: [],
+      filteredRows: [],
+      columns: [...EXPECTED_COLUMNS],
+      query: '',
+      tokens: [],
+      field: '',
+      form: '',
+      space: '',
+      guide: '',
+      sort: 'name',
+      lastLoadedAt: null,
+      detailRow: null,
+      sheetSpaceAliases: {},
+      userSpaceAliases: {},
+      expandedRows: new Set()
+    };
+
+    const els = {};
+    let searchTimer = 0;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      cacheElements();
+      loadUserSpaceAliases();
+      bindEvents();
+      updateSourceLink();
+      renderSpaceTabs();
+      loadFromGoogleSheet();
+    });
+
+    function cacheElements() {
+      const ids = [
+        'sourceLink', 'refreshBtn', 'printBtn', 'spaceAliasBtn', 'spaceClearBtn', 'spaceMap', 'spaceSelectedText',
+        'statusDot', 'statusText', 'statusDetail', 'lastLoaded',
+        'searchInput', 'fieldFilter', 'formFilter', 'spaceFilter', 'guideFilter', 'sortSelect', 'resetBtn',
+        'totalCount', 'resultCount', 'fieldCount', 'formCount', 'spaceCount', 'messageBar', 'cardsView',
+        'emptyState', 'detailDialog', 'dialogTitle', 'dialogTags', 'dialogBody', 'closeDialogBtn',
+        'aliasDialog', 'aliasEditor', 'closeAliasBtn', 'saveAliasBtn', 'aliasResetBtn'
+      ];
+      ids.forEach(id => { els[id] = document.getElementById(id); });
+    }
+
+    function bindEvents() {
+      els.refreshBtn.addEventListener('click', () => loadFromGoogleSheet({ force: true }));
+      els.printBtn.addEventListener('click', () => window.print());
+      els.resetBtn.addEventListener('click', resetFilters);
+      els.closeDialogBtn.addEventListener('click', closeDialog);
+      els.spaceAliasBtn.addEventListener('click', openAliasDialog);
+      els.closeAliasBtn.addEventListener('click', closeAliasDialog);
+      els.saveAliasBtn.addEventListener('click', saveAliasDialog);
+      els.aliasResetBtn.addEventListener('click', clearAliasInputs);
+      els.spaceClearBtn.addEventListener('click', () => selectSpace(''));
+      els.spaceMap.addEventListener('click', event => {
+        const button = event.target.closest('[data-space-tab]');
+        if (!button) return;
+        selectSpace(button.dataset.spaceTab || '');
+      });
+
+      els.searchInput.addEventListener('input', () => {
+        window.clearTimeout(searchTimer);
+        searchTimer = window.setTimeout(() => {
+          state.query = els.searchInput.value.trim();
+          applyFilters();
+        }, 90);
+      });
+
+      [els.fieldFilter, els.formFilter, els.spaceFilter, els.guideFilter, els.sortSelect].forEach(control => {
+        control.addEventListener('change', () => {
+          const previousSpace = state.space;
+          state.field = els.fieldFilter.value;
+          state.form = els.formFilter.value;
+          state.space = els.spaceFilter.value;
+          state.guide = els.guideFilter.value;
+          state.sort = els.sortSelect.value;
+          if (state.space !== previousSpace) state.expandedRows.clear();
+          applyFilters();
+        });
+      });
+
+      document.querySelectorAll('.hint-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          els.searchInput.value = btn.dataset.query || '';
+          state.query = els.searchInput.value.trim();
+          applyFilters();
+          els.searchInput.focus();
+        });
+      });
+
+      els.cardsView.addEventListener('click', handleResultClick);
+      els.detailDialog.addEventListener('click', event => {
+        const rect = els.detailDialog.getBoundingClientRect();
+        const clickedOutside = event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom;
+        if (clickedOutside) closeDialog();
+      });
+
+      els.aliasDialog.addEventListener('click', event => {
+        const rect = els.aliasDialog.getBoundingClientRect();
+        const clickedOutside = event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom;
+        if (clickedOutside) closeAliasDialog();
+      });
+
+      document.addEventListener('keydown', event => {
+        if (event.key === 'Escape' && isDialogOpen()) closeDialog();
+      });
+    }
+
+    async function loadFromGoogleSheet(options = {}) {
+      setStatus('loading', '구글시트에서 데이터를 불러오는 중입니다.', '공개 링크 또는 브라우저 권한에 따라 로드 여부가 달라질 수 있습니다.');
+      showMessage('', '');
+
+      try {
+        const rows = await loadGvizJsonp(source.sheetId, source.gid);
+        if (!rows.length) throw new Error('시트에 읽을 수 있는 데이터 행이 없습니다.');
+        applyData(rows, 'Google Sheet');
+        saveCache(rows);
+        setStatus('ok', '구글시트 데이터가 연결되었습니다.', `${rows.length.toLocaleString('ko-KR')}개 행을 불러왔습니다.`);
+        if (options.force) showMessage('ok', '구글시트 데이터를 새로 불러왔습니다.');
+      } catch (error) {
+        const cached = loadCache();
+        if (cached && Array.isArray(cached.rows) && cached.rows.length) {
+          applyData(cached.rows, '저장된 캐시');
+          setStatus('warn', '구글시트를 직접 불러오지 못해 저장된 데이터를 표시합니다.', error.message || '로드 실패');
+          showMessage('warn', '최신 데이터가 아닐 수 있습니다. 원본 시트 공유 권한이 “링크가 있는 사용자 보기 가능”인지 확인한 뒤 새로고침해 주세요.');
+        } else {
+          state.rows = [];
+          state.filteredRows = [];
+          renderAll();
+          setStatus('error', '구글시트를 자동으로 불러오지 못했습니다.', error.message || '로드 실패');
+          showMessage('error', '원본 시트 공유 권한이 “링크가 있는 사용자 보기 가능”인지 확인한 뒤 시트 새로고침을 눌러 주세요.');
+        }
+      }
+    }
+
+    function loadGvizJsonp(sheetId, gid) {
+      return new Promise((resolve, reject) => {
+        if (!sheetId) {
+          reject(new Error('Google Sheet ID가 없습니다.'));
+          return;
+        }
+
+        const callbackName = `otcSheetCallback_${Date.now()}_${Math.floor(Math.random() * 100000)}`;
+        const script = document.createElement('script');
+        let settled = false;
+        const oldGoogle = window.google;
+        const oldSetResponse = window.google && window.google.visualization && window.google.visualization.Query && window.google.visualization.Query.setResponse;
+        const timeout = window.setTimeout(() => {
+          finish(() => reject(new Error('구글시트 응답 시간이 초과되었습니다. 시트 공유 권한을 확인해 주세요.')));
+        }, 15000);
+
+        window[callbackName] = response => {
+          finish(() => {
+            try {
+              resolve(parseGvizResponse(response));
+            } catch (error) {
+              reject(error);
+            }
+          });
+        };
+
+        window.google = window.google || {};
+        window.google.visualization = window.google.visualization || {};
+        window.google.visualization.Query = window.google.visualization.Query || {};
+        window.google.visualization.Query.setResponse = response => {
+          window[callbackName](response);
+        };
+
+        script.onerror = () => {
+          finish(() => reject(new Error('구글시트 스크립트 로드에 실패했습니다.')));
+        };
+
+        const tqx = encodeURIComponent(`out:json;responseHandler:${callbackName}`);
+        script.src = `https://docs.google.com/spreadsheets/d/${encodeURIComponent(sheetId)}/gviz/tq?gid=${encodeURIComponent(gid || '0')}&headers=1&tqx=${tqx}`;
+        document.head.appendChild(script);
+
+        function finish(fn) {
+          if (settled) return;
+          settled = true;
+          window.clearTimeout(timeout);
+          delete window[callbackName];
+          script.remove();
+          if (oldGoogle === undefined) {
+            try { delete window.google; } catch (error) { window.google = undefined; }
+          } else {
+            window.google = oldGoogle;
+            if (oldSetResponse && window.google.visualization && window.google.visualization.Query) {
+              window.google.visualization.Query.setResponse = oldSetResponse;
+            }
+          }
+          fn();
+        }
+      });
+    }
+
+    function parseGvizResponse(response) {
+      if (!response) throw new Error('구글시트 응답이 비어 있습니다.');
+      if (response.status === 'error') {
+        const errors = (response.errors || []).map(err => err.detailed_message || err.message).filter(Boolean).join(' ');
+        throw new Error(errors || '구글시트에서 오류 응답을 받았습니다.');
+      }
+      if (!response.table || !Array.isArray(response.table.rows)) {
+        throw new Error('구글시트 표 구조를 인식하지 못했습니다.');
+      }
+
+      const labels = (response.table.cols || []).map((col, index) => {
+        const raw = (col && (col.label || col.id)) || '';
+        return resolveColumn(raw) || cleanHeader(raw) || EXPECTED_COLUMNS[index] || `열${index + 1}`;
+      });
+
+      const rows = response.table.rows.map(row => {
+        const obj = emptyExpectedRow();
+        (row.c || []).forEach((cell, index) => {
+          const key = labels[index] || EXPECTED_COLUMNS[index] || `열${index + 1}`;
+          obj[key] = cellToText(cell);
+        });
+        return normalizeRow(obj);
+      }).filter(hasAnyValue);
+
+      return rows;
+    }
+
+    function cellToText(cell) {
+      if (!cell) return '';
+      if (cell.f !== undefined && cell.f !== null && String(cell.f).trim() !== '') return String(cell.f).trim();
+      const value = cell.v;
+      if (value === undefined || value === null) return '';
+      if (value instanceof Date) return value.toLocaleDateString('ko-KR');
+      return String(value).replace(/^Date\((\d+),(\d+),(\d+)\)$/, (_, y, m, d) => {
+        const date = new Date(Number(y), Number(m), Number(d));
+        return date.toLocaleDateString('ko-KR');
+      }).trim();
+    }
+
+    function applyData(rows, label) {
+      const normalizedRows = assignRowIds(rows.map(normalizeRow).filter(hasAnyValue));
+      state.rows = normalizedRows;
+      state.sheetSpaceAliases = deriveSpaceAliases(normalizedRows);
+      state.expandedRows.clear();
+      state.columns = buildColumns(normalizedRows);
+      state.lastLoadedAt = new Date();
+      populateFilters();
+      state.query = els.searchInput.value.trim();
+      applyFilters();
+      updateLastLoaded(label);
+    }
+
+    function assignRowIds(rows) {
+      rows.forEach((row, index) => {
+        Object.defineProperty(row, '__rowId', {
+          value: `row-${index}`,
+          enumerable: false,
+          configurable: true
+        });
+      });
+      return rows;
+    }
+
+    function deriveSpaceAliases(rows) {
+      const aliases = {};
+      rows.forEach(row => {
+        const aliasText = String(row['공간별명'] || '').trim();
+        if (!aliasText) return;
+
+        const pairs = parseSpaceAliasPairs(aliasText);
+        const pairKeys = Object.keys(pairs);
+        if (pairKeys.length) {
+          pairKeys.forEach(key => {
+            if (!aliases[key]) aliases[key] = pairs[key];
+          });
+          return;
+        }
+
+        const spaces = parseSpaceTokens(row['공간']);
+        if (spaces.length === 1 && !aliases[spaces[0]]) {
+          aliases[spaces[0]] = cleanAliasText(aliasText);
+        }
+      });
+      return aliases;
+    }
+
+    function parseSpaceAliasPairs(text) {
+      const aliases = {};
+      String(text || '').split(/[\n;；]+/).forEach(part => {
+        const match = part.match(/^(.+?)[=:：]\s*(.+)$/);
+        if (!match) return;
+        const spaces = parseSpaceTokens(match[1]);
+        const alias = cleanAliasText(match[2]);
+        if (!spaces.length || !alias) return;
+        spaces.forEach(space => { aliases[space] = alias; });
+      });
+      return aliases;
+    }
+
+    function cleanAliasText(value) {
+      return String(value || '').replace(/\s+/g, ' ').trim();
+    }
+
+    function buildColumns(rows) {
+      const extra = [];
+      rows.forEach(row => {
+        Object.keys(row).forEach(key => {
+          if (key.startsWith('__')) return;
+          if (!EXPECTED_COLUMNS.includes(key) && !extra.includes(key) && rows.some(r => String(r[key] || '').trim())) {
+            extra.push(key);
+          }
+        });
+      });
+      return [...EXPECTED_COLUMNS, ...extra];
+    }
+
+    function normalizeRow(row) {
+      const out = emptyExpectedRow();
+      Object.entries(row || {}).forEach(([rawKey, rawValue]) => {
+        const key = resolveColumn(rawKey) || cleanHeader(rawKey) || rawKey;
+        out[key] = normalizeCellValue(rawValue);
+      });
+      return out;
+    }
+
+    function emptyExpectedRow() {
+      return Object.fromEntries(EXPECTED_COLUMNS.map(column => [column, '']));
+    }
+
+    function normalizeCellValue(value) {
+      return String(value === undefined || value === null ? '' : value)
+        .replace(/\r\n/g, '\n')
+        .replace(/\r/g, '\n')
+        .replace(/[ \t]+\n/g, '\n')
+        .trim();
+    }
+
+    function hasAnyValue(row) {
+      return Object.values(row || {}).some(value => String(value || '').trim() !== '');
+    }
+
+    function populateFilters() {
+      const fieldValues = uniqueFacetValues(state.rows, '분야');
+      const formValues = uniqueFacetValues(state.rows, '제형');
+      const spaceValues = uniqueSpaceValues(state.rows);
+      fillSelect(els.fieldFilter, fieldValues, '전체');
+      fillSelect(els.formFilter, formValues, '전체');
+      fillSelect(els.spaceFilter, spaceValues, '전체', spaceDisplayName);
+      if (state.space) setSpaceFilterValue(state.space);
+      els.fieldCount.textContent = fieldValues.length.toLocaleString('ko-KR');
+      els.formCount.textContent = formValues.length.toLocaleString('ko-KR');
+      els.spaceCount.textContent = spaceValues.length.toLocaleString('ko-KR');
+      renderSpaceTabs();
+    }
+
+    function uniqueFacetValues(rows, column) {
+      const set = new Set();
+      rows.forEach(row => splitFacet(row[column]).forEach(value => set.add(value)));
+      return [...set].sort((a, b) => a.localeCompare(b, 'ko-KR'));
+    }
+
+    function uniqueSpaceValues(rows) {
+      const set = new Set();
+      rows.forEach(row => {
+        const tokens = parseSpaceTokens(row['공간']);
+        if (tokens.length) {
+          tokens.forEach(value => set.add(value));
+        } else {
+          splitFacet(row['공간']).forEach(value => set.add(value));
+        }
+      });
+      return [...set].sort(compareSpaceValues);
+    }
+
+    function splitFacet(value) {
+      return String(value || '')
+        .split(/[\n,;|·]+|\s\/\s|\s>\s/g)
+        .map(item => item.trim())
+        .filter(Boolean);
+    }
+
+    function fillSelect(select, values, allLabel, labelFn = value => value) {
+      const previous = select.value;
+      select.innerHTML = '';
+      const all = document.createElement('option');
+      all.value = '';
+      all.textContent = allLabel;
+      select.appendChild(all);
+      values.forEach(value => {
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = labelFn(value);
+        select.appendChild(option);
+      });
+      if (values.includes(previous)) select.value = previous;
+    }
+
+    function selectSpace(value) {
+      const next = String(value || '').trim();
+      if (state.space !== next) state.expandedRows.clear();
+      state.space = next;
+      setSpaceFilterValue(next);
+      applyFilters();
+      if (next && els.cardsView) {
+        els.cardsView.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    function setSpaceFilterValue(value) {
+      if (!els.spaceFilter) return;
+      const next = String(value || '').trim();
+      if (next && !Array.from(els.spaceFilter.options).some(option => option.value === next)) {
+        const option = document.createElement('option');
+        option.value = next;
+        option.textContent = spaceDisplayName(next);
+        els.spaceFilter.appendChild(option);
+      }
+      els.spaceFilter.value = next;
+    }
+
+    function renderSpaceTabs() {
+      if (!els.spaceMap) return;
+      const counts = countRowsBySpace(state.rows);
+      const current = state.space || '';
+      const currentCount = current
+        ? state.rows.filter(row => spaceMatches(row['공간'], current)).length
+        : state.rows.length;
+
+      if (els.spaceSelectedText) {
+        els.spaceSelectedText.textContent = current
+          ? `${spaceDisplayName(current)} · ${currentCount.toLocaleString('ko-KR')}개 제품`
+          : `전체 공간 · ${state.rows.length.toLocaleString('ko-KR')}개 제품`;
+      }
+      if (els.spaceClearBtn) {
+        els.spaceClearBtn.classList.toggle('active', !current);
+      }
+
+      const slotButton = key => {
+        const count = counts.get(key) || 0;
+        const active = current === key ? ' active' : '';
+        const alias = getSpaceAlias(key);
+        const labelHtml = alias
+          ? `<span class="space-alias">${escapeHtml(alias)}</span><span class="space-code">${escapeHtml(key)}</span>`
+          : `<span class="space-code">${escapeHtml(key)}</span>`;
+        const title = `${spaceDisplayName(key)} 공간 ${count.toLocaleString('ko-KR')}개 제품`;
+        return `<button class="space-slot${alias ? ' has-alias' : ' no-alias'}${active}" type="button" data-space-tab="${escapeHtml(key)}" aria-pressed="${current === key}" title="${escapeHtml(title)}">${labelHtml}<em>${count}</em></button>`;
+      };
+      const shelf = startCol => {
+        let cells = '';
+        for (let row = 7; row >= 1; row -= 1) {
+          cells += slotButton(`${startCol}-${row}`);
+          cells += slotButton(`${startCol + 1}-${row}`);
+        }
+        return `<div class="space-shelf"><div class="space-shelf-title">책장</div><div class="space-slot-grid">${cells}</div></div>`;
+      };
+      const lowerButton = (label, extra = '') => {
+        const count = counts.get(label) || 0;
+        const active = current === label ? ' active' : '';
+        const alias = getSpaceAlias(label);
+        const labelHtml = alias
+          ? `<span class="space-alias">${escapeHtml(alias)}</span><span class="space-code">${escapeHtml(label)}</span>`
+          : `<span class="space-code">${escapeHtml(label)}</span>`;
+        const title = `${spaceDisplayName(label)} 공간 ${count.toLocaleString('ko-KR')}개 제품`;
+        return `<button class="space-lower-slot ${extra}${alias ? ' has-alias' : ' no-alias'}${active}" type="button" data-space-tab="${escapeHtml(label)}" aria-pressed="${current === label}" title="${escapeHtml(title)}">${labelHtml}<em>${count}</em></button>`;
+      };
+
+      els.spaceMap.innerHTML = `
+        <div class="space-layout">
+          ${shelf(1)}
+          <div class="space-aisle">통로</div>
+          ${shelf(3)}
+        </div>
+        <div class="space-lower-grid">
+          ${lowerButton('책장밑')}
+          ${lowerButton('서랍')}
+          ${lowerButton('가판대', 'stand')}
+        </div>
+      `;
+    }
+
+    function countRowsBySpace(rows) {
+      const counts = new Map();
+      rows.forEach(row => {
+        parseSpaceTokens(row['공간']).forEach(token => {
+          counts.set(token, (counts.get(token) || 0) + 1);
+        });
+      });
+      return counts;
+    }
+
+    function getSpaceAlias(key) {
+      const normalized = String(key || '').trim();
+      return cleanAliasText(
+        state.userSpaceAliases[normalized] ||
+        state.sheetSpaceAliases[normalized] ||
+        SPACE_ALIAS_PRESETS[normalized] ||
+        ''
+      );
+    }
+
+    function spaceDisplayName(key) {
+      const text = String(key || '').trim();
+      if (!text) return '';
+      const alias = getSpaceAlias(text);
+      return alias ? `${alias} · ${text}` : text;
+    }
+
+    function loadUserSpaceAliases() {
+      try {
+        const raw = localStorage.getItem(aliasCacheKey());
+        state.userSpaceAliases = raw ? JSON.parse(raw) : {};
+      } catch (error) {
+        state.userSpaceAliases = {};
+      }
+    }
+
+    function saveUserSpaceAliases() {
+      try {
+        localStorage.setItem(aliasCacheKey(), JSON.stringify(state.userSpaceAliases));
+      } catch (error) {
+        showMessage('warn', '공간 별명을 브라우저 저장소에 저장하지 못했습니다. 시트의 공간별명 열을 사용하는 방법도 가능합니다.');
+      }
+    }
+
+    function aliasCacheKey() {
+      return `otc-medicine-space-aliases:${source.sheetId}:${source.gid}`;
+    }
+
+    function defaultSpaceKeys() {
+      const keys = [];
+      for (let row = 7; row >= 1; row -= 1) {
+        keys.push(`1-${row}`, `2-${row}`);
+      }
+      for (let row = 7; row >= 1; row -= 1) {
+        keys.push(`3-${row}`, `4-${row}`);
+      }
+      keys.push('책장밑', '서랍', '가판대');
+      return keys;
+    }
+
+    function allAliasSpaceKeys() {
+      const set = new Set(defaultSpaceKeys());
+      uniqueSpaceValues(state.rows).forEach(key => set.add(key));
+      Object.keys(state.sheetSpaceAliases).forEach(key => set.add(key));
+      Object.keys(state.userSpaceAliases).forEach(key => set.add(key));
+      return [...set].sort(compareSpaceValues);
+    }
+
+    function openAliasDialog() {
+      renderAliasEditor();
+      if (typeof els.aliasDialog.showModal === 'function') {
+        els.aliasDialog.showModal();
+      } else {
+        els.aliasDialog.setAttribute('open', 'open');
+      }
+    }
+
+    function closeAliasDialog() {
+      if (typeof els.aliasDialog.close === 'function') {
+        els.aliasDialog.close();
+      } else {
+        els.aliasDialog.removeAttribute('open');
+      }
+    }
+
+    function renderAliasEditor() {
+      const keys = allAliasSpaceKeys();
+      els.aliasEditor.innerHTML = keys.map(key => {
+        const alias = getSpaceAlias(key);
+        const sheetAlias = state.sheetSpaceAliases[key] ? `시트: ${state.sheetSpaceAliases[key]}` : '';
+        return `<label class="alias-field"><span>${escapeHtml(key)}${sheetAlias ? ` <small>${escapeHtml(sheetAlias)}</small>` : ''}</span><input type="text" data-alias-key="${escapeHtml(key)}" value="${escapeHtml(alias)}" placeholder="예: 해열·진통제"></label>`;
+      }).join('');
+    }
+
+    function clearAliasInputs() {
+      els.aliasEditor.querySelectorAll('[data-alias-key]').forEach(input => { input.value = ''; });
+    }
+
+    function saveAliasDialog() {
+      const next = {};
+      els.aliasEditor.querySelectorAll('[data-alias-key]').forEach(input => {
+        const key = input.dataset.aliasKey;
+        const value = cleanAliasText(input.value);
+        if (key && value) next[key] = value;
+      });
+      state.userSpaceAliases = next;
+      saveUserSpaceAliases();
+      populateFilters();
+      renderAll();
+      closeAliasDialog();
+      showMessage('ok', '공간 별명을 저장했습니다.');
+    }
+
+    function applyFilters() {
+      state.tokens = parseQuery(state.query);
+      let filtered = state.rows.filter(row => {
+        if (state.field && !facetMatches(row['분야'], state.field)) return false;
+        if (state.form && !facetMatches(row['제형'], state.form)) return false;
+        if (state.space && !spaceMatches(row['공간'], state.space)) return false;
+        if (state.guide === 'has' && !hasGuidance(row)) return false;
+        if (state.guide === 'empty' && hasGuidance(row)) return false;
+        return matchesTokens(row, state.tokens);
+      });
+      filtered = filtered.sort(compareRows);
+      state.filteredRows = filtered;
+      renderAll();
+    }
+
+    function facetMatches(value, selected) {
+      return splitFacet(value).some(item => normalizeSearchText(item) === normalizeSearchText(selected)) || textIncludes(value, selected);
+    }
+
+    function spaceMatches(value, selected) {
+      const tokens = parseSpaceTokens(value);
+      return tokens.some(token => normalizeSearchText(token) === normalizeSearchText(selected)) || textIncludes(value, selected);
+    }
+
+    function parseQuery(query) {
+      const tokens = [];
+      const regex = /"([^"]+)"|'([^']+)'|(\S+)/g;
+      let match;
+      while ((match = regex.exec(query || ''))) {
+        let raw = (match[1] || match[2] || match[3] || '').trim();
+        if (!raw) continue;
+        const negative = raw.startsWith('-');
+        if (negative) raw = raw.slice(1).trim();
+        if (!raw) continue;
+        let column = '';
+        let term = raw;
+        const scoped = raw.match(/^([^:：]+)[:：](.+)$/);
+        if (scoped) {
+          const resolved = resolveColumn(scoped[1]);
+          if (resolved) {
+            column = resolved;
+            term = scoped[2].trim();
+          }
+        }
+        if (!term) continue;
+        tokens.push({ raw, term, column, negative });
+      }
+      return tokens;
+    }
+
+    function matchesTokens(row, tokens) {
+      if (!tokens.length) return true;
+      return tokens.every(token => {
+        const haystack = token.column ? row[token.column] : state.columns.map(col => row[col] || '').join(' ');
+        const matched = textIncludes(haystack, token.term);
+        return token.negative ? !matched : matched;
+      });
+    }
+
+    function textIncludes(value, term) {
+      const left = normalizeSearchText(value);
+      const right = normalizeSearchText(term);
+      if (!right) return true;
+      return left.includes(right) || compactText(left).includes(compactText(right));
+    }
+
+    function compareRows(a, b) {
+      const mode = state.sort || 'name';
+      if (mode === 'space') {
+        const spaceResult = compareSpaceValues(firstSpaceValue(a['공간']), firstSpaceValue(b['공간']));
+        if (spaceResult !== 0) return spaceResult;
+        return compareText(a['제품명'], b['제품명']);
+      }
+      const primary = {
+        name: ['제품명'],
+        field: ['분야', '제품명'],
+        component: ['성분', '제품명'],
+        form: ['제형', '제품명']
+      }[mode] || ['제품명'];
+      for (const column of primary) {
+        const result = compareText(a[column], b[column]);
+        if (result !== 0) return result;
+      }
+      return 0;
+    }
+
+    function compareText(a, b) {
+      return String(a || '').localeCompare(String(b || ''), 'ko-KR', { numeric: true, sensitivity: 'base' });
+    }
+
+    function renderAll() {
+      els.totalCount.textContent = state.rows.length.toLocaleString('ko-KR');
+      els.resultCount.textContent = state.filteredRows.length.toLocaleString('ko-KR');
+      renderSpaceTabs();
+      renderCards();
+      updateEmptyState();
+    }
+
+    function renderCards() {
+      const fragment = document.createDocumentFragment();
+      const compactMode = isSpaceCompactMode();
+      state.filteredRows.forEach((row, index) => {
+        const card = document.createElement('article');
+        const rowId = rowKey(row);
+        const isCompact = compactMode && !state.expandedRows.has(rowId);
+        card.className = isCompact ? 'drug-card compact-drug-card' : 'drug-card';
+        card.dataset.rowId = rowId;
+        card.innerHTML = isCompact ? compactCardTemplate(row, index) : cardTemplate(row, index);
+        fragment.appendChild(card);
+      });
+      els.cardsView.replaceChildren(fragment);
+    }
+
+    function isSpaceCompactMode() {
+      return Boolean(state.space);
+    }
+
+    function rowKey(row) {
+      return row && row.__rowId ? row.__rowId : `${row?.['제품명'] || ''}|${row?.['성분'] || ''}|${row?.['공간'] || ''}`;
+    }
+
+    function compactCardTemplate(row, index) {
+      const name = row['제품명'] || '제품명 없음';
+      const tags = [
+        tagHtml(row['분야'], 'good', 42),
+        tagHtml(row['제형'], 'neutral', 42),
+        tagHtml(row['성분'], 'warn', 96, 'component-tag')
+      ].filter(Boolean).join('');
+
+      return `
+        <button class="compact-card-button" type="button" data-expand-index="${index}" aria-expanded="false" title="클릭하면 상세 카드로 펼쳐집니다">
+          <div class="compact-card-title-row">
+            <span class="compact-card-title">${formatText(name)}</span>
+            <span class="compact-open-cue">펼치기</span>
+          </div>
+          <div class="tags compact-tags">${tags}</div>
+        </button>
+      `;
+    }
+
+    function cardTemplate(row, index) {
+      const name = row['제품명'] || '제품명 없음';
+      const effect = row['효능효과'] || '효능효과 정보 없음';
+      const dose = row['용법용량'] || '용법용량 정보 없음';
+      const guide = combineGuidance(row);
+      const same = row['동일성분의약품'] || '';
+      const tags = [
+        tagHtml(row['분야'], 'good'),
+        tagHtml(row['제형'], 'neutral'),
+        componentTagHtml(row['성분'], index)
+      ].filter(Boolean).join('');
+      const sameHtml = same ? `<dl class="info-block"><dt>동일성분의약품</dt><dd>${chipListHtml(same)}</dd></dl>` : '';
+      const guideButton = guide ? `<button class="small-btn" type="button" data-guide-index="${index}">복약지도</button>` : '';
+      const collapseButton = isSpaceCompactMode() ? `<button class="small-btn" type="button" data-collapse-index="${index}">간단히 접기</button>` : '';
+
+      return `
+        <div class="drug-card-header">
+          <h2>${formatText(name)}</h2>
+          <div class="tags">${tags}</div>
+        </div>
+        <div class="drug-card-body">
+          <dl class="info-block"><dt>효능효과</dt><dd>${formatText(shorten(effect, 180))}</dd></dl>
+          <dl class="info-block"><dt>용법용량</dt><dd>${formatText(shorten(dose, 165))}</dd></dl>
+          ${guidanceCardHtml(row, { compact: true })}
+          ${sameHtml}
+          <div class="card-actions">
+            <button class="small-btn" type="button" data-detail-index="${index}">전체 보기</button>
+            ${guideButton}
+            ${collapseButton}
+          </div>
+        </div>
+      `;
+    }
+
+    function updateEmptyState() {
+      const hasRows = state.filteredRows.length > 0;
+      els.emptyState.classList.toggle('hidden', hasRows);
+      els.cardsView.classList.toggle('hidden', !hasRows);
+    }
+
+    function handleResultClick(event) {
+      const expandButton = event.target.closest('[data-expand-index]');
+      if (expandButton) {
+        expandCompactCard(Number(expandButton.dataset.expandIndex));
+        return;
+      }
+
+      const collapseButton = event.target.closest('[data-collapse-index]');
+      if (collapseButton) {
+        collapseFullCard(Number(collapseButton.dataset.collapseIndex));
+        return;
+      }
+
+      const componentButton = event.target.closest('[data-component-index]');
+      if (componentButton) {
+        toggleComponentTag(componentButton);
+        return;
+      }
+
+      const detailButton = event.target.closest('[data-detail-index]');
+      if (detailButton) {
+        openDetail(Number(detailButton.dataset.detailIndex));
+        return;
+      }
+      const guideButton = event.target.closest('[data-guide-index]');
+      if (guideButton) {
+        openGuide(Number(guideButton.dataset.guideIndex));
+      }
+    }
+
+    function expandCompactCard(index) {
+      const row = state.filteredRows[index];
+      if (!row) return;
+      const id = rowKey(row);
+      state.expandedRows.add(id);
+      renderCards();
+      window.requestAnimationFrame(() => {
+        const card = els.cardsView.querySelector(`[data-row-id="${id}"]`);
+        if (card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+    }
+
+    function collapseFullCard(index) {
+      const row = state.filteredRows[index];
+      if (!row) return;
+      const id = rowKey(row);
+      state.expandedRows.delete(id);
+      renderCards();
+      window.requestAnimationFrame(() => {
+        const card = els.cardsView.querySelector(`[data-row-id="${id}"]`);
+        if (card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+    }
+
+    function toggleComponentTag(button) {
+      const row = state.filteredRows[Number(button.dataset.componentIndex)];
+      if (!row) return;
+      const full = String(row['성분'] || '').trim();
+      const expanded = button.dataset.componentExpanded === 'true';
+      const nextExpanded = !expanded;
+      const text = nextExpanded ? full : shorten(full, COMPONENT_TAG_MAX);
+      button.dataset.componentExpanded = String(nextExpanded);
+      button.setAttribute('aria-expanded', String(nextExpanded));
+      button.classList.toggle('expanded', nextExpanded);
+      button.innerHTML = `${formatText(text)}<span class="toggle-cue">${nextExpanded ? '접기' : '전체'}</span>`;
+    }
+
+    function openDetail(index) {
+      const row = state.filteredRows[index];
+      if (!row) return;
+      state.detailRow = row;
+      els.dialogTitle.innerHTML = formatText(row['제품명'] || '제품 상세');
+      els.dialogTags.innerHTML = [
+        tagHtml(row['분야'], 'good'),
+        tagHtml(row['제형'], 'neutral'),
+        tagHtml(row['성분'], 'warn', 0, 'component-tag')
+      ].filter(Boolean).join('');
+      els.dialogBody.innerHTML = state.columns.map(column => detailSectionHtml(column, row[column] || '')).join('');
+      showDialog();
+    }
+
+    function openGuide(index) {
+      const row = state.filteredRows[index];
+      if (!row) return;
+      state.detailRow = row;
+      els.dialogTitle.innerHTML = `${formatText(row['제품명'] || '제품 상세')} · 복약지도`;
+      els.dialogTags.innerHTML = [
+        tagHtml(row['분야'], 'good'),
+        tagHtml(row['제형'], 'neutral'),
+        tagHtml(row['성분'], 'warn', 0, 'component-tag')
+      ].filter(Boolean).join('');
+
+      const guidanceHtml = guidanceCardHtml(row, { compact: false });
+      els.dialogBody.innerHTML = guidanceHtml || detailSectionHtml('복약지도/특이사항', '정보 없음');
+      showDialog();
+    }
+
+    function detailSectionHtml(column, value) {
+      if (column === '공간별명') return '';
+      const text = value || '정보 없음';
+      if (column === '공간' && String(value || '').trim()) {
+        return `<section class="detail-section"><h3>${escapeHtml(column)}</h3>${locationHtml(value)}</section>`;
+      }
+      if ((column === '복약지도' || column === '특이사항') && String(value || '').trim()) {
+        return `<section class="detail-section guidance-detail">${guidePartHtml(column, value, false)}</section>`;
+      }
+      return `<section class="detail-section"><h3>${escapeHtml(column)}</h3><p>${formatText(text)}</p></section>`;
+    }
+
+    function showDialog() {
+      if (typeof els.detailDialog.showModal === 'function') {
+        els.detailDialog.showModal();
+      } else {
+        els.detailDialog.setAttribute('open', 'open');
+      }
+    }
+
+    function closeDialog() {
+      if (typeof els.detailDialog.close === 'function') {
+        els.detailDialog.close();
+      } else {
+        els.detailDialog.removeAttribute('open');
+      }
+    }
+
+    function isDialogOpen() {
+      return els.detailDialog.open || els.detailDialog.hasAttribute('open');
+    }
+
+    function resetFilters() {
+      els.searchInput.value = '';
+      els.fieldFilter.value = '';
+      els.formFilter.value = '';
+      els.spaceFilter.value = '';
+      els.guideFilter.value = '';
+      els.sortSelect.value = 'name';
+      state.query = '';
+      state.field = '';
+      state.form = '';
+      state.space = '';
+      state.guide = '';
+      state.sort = 'name';
+      state.expandedRows.clear();
+      applyFilters();
+    }
+
+    function updateSourceLink() {
+      els.sourceLink.href = source.url || `https://docs.google.com/spreadsheets/d/${source.sheetId}/edit`;
+    }
+
+    function parseSheetUrl(input) {
+      const raw = String(input || '').trim();
+      const idMatch = raw.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/) || raw.match(/^([a-zA-Z0-9-_]{20,})$/);
+      const gidMatch = raw.match(/[?#&]gid=(\d+)/) || raw.match(/gid=(\d+)/);
+      return {
+        sheetId: idMatch ? idMatch[1] : '',
+        gid: gidMatch ? gidMatch[1] : ''
+      };
+    }
+
+    function saveCache(rows) {
+      try {
+        localStorage.setItem(cacheKey(), JSON.stringify({ savedAt: new Date().toISOString(), rows }));
+      } catch (error) {
+        // 저장 공간 제한이 있으면 캐시 없이 계속 사용합니다.
+      }
+    }
+
+    function loadCache() {
+      try {
+        const raw = localStorage.getItem(cacheKey());
+        return raw ? JSON.parse(raw) : null;
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function cacheKey() {
+      return `otc-medicine-browser:${source.sheetId}:${source.gid}`;
+    }
+
+    function setStatus(type, text, detail) {
+      els.statusDot.className = `status-dot ${type || ''}`.trim();
+      els.statusText.textContent = text || '';
+      els.statusDetail.textContent = detail || '';
+    }
+
+    function updateLastLoaded(label) {
+      const time = state.lastLoadedAt ? state.lastLoadedAt.toLocaleString('ko-KR') : '아직 불러오지 않음';
+      els.lastLoaded.textContent = `${label || '데이터'} · ${time}`;
+    }
+
+    function showMessage(type, message) {
+      els.messageBar.className = `message ${type || ''}`.trim();
+      if (!message) {
+        els.messageBar.classList.remove('show');
+        els.messageBar.textContent = '';
+        return;
+      }
+      els.messageBar.textContent = message;
+      els.messageBar.classList.add('show');
+    }
+
+    function tagHtml(value, type = 'neutral', max = 52, extraClass = '') {
+      const text = String(value || '').trim();
+      if (!text) return '';
+      const content = max ? shorten(text, max) : text;
+      const className = ['tag', type, extraClass].filter(Boolean).join(' ');
+      return `<span class="${escapeHtml(className)}">${formatText(content)}</span>`;
+    }
+
+    function componentTagHtml(value, index) {
+      const text = String(value || '').trim();
+      if (!text) return '';
+      const needsToggle = text.length > COMPONENT_TAG_MAX;
+      const shown = needsToggle ? shorten(text, COMPONENT_TAG_MAX) : text;
+      const className = `tag warn component-tag${needsToggle ? ' component-toggle' : ''}`;
+      if (!needsToggle) {
+        return `<span class="${escapeHtml(className)}">${formatText(shown)}</span>`;
+      }
+      return `<button class="${escapeHtml(className)}" type="button" data-component-index="${index}" data-component-expanded="false" aria-expanded="false" title="클릭하면 전체 성분을 표시합니다">${formatText(shown)}<span class="toggle-cue">전체</span></button>`;
+    }
+
+    function chipListHtml(value) {
+      const items = splitFacet(value);
+      if (!items.length) return formatText(value);
+      return `<span class="tags">${items.map(item => tagHtml(item, 'neutral', 0)).join('')}</span>`;
+    }
+
+    function guidanceCardHtml(row, options = {}) {
+      const guide = String(row['복약지도'] || '').trim();
+      const note = String(row['특이사항'] || '').trim();
+      if (!guide && !note) return '';
+      const compact = options.compact !== false;
+      const parts = [];
+      if (guide) parts.push(guidePartHtml('복약지도', guide, compact));
+      if (note) parts.push(guidePartHtml('특이사항', note, compact));
+      return `<section class="guide-box"><h3>복약지도/특이사항</h3><div class="guide-sections">${parts.join('')}</div></section>`;
+    }
+
+    function guidePartHtml(title, text, compact = true) {
+      const raw = String(text || '').trim();
+      const items = guidanceItems(raw);
+      const hasListShape = items.length > 1 || /^\s*[-•·*]/m.test(raw);
+      if (hasListShape) {
+        const maxItems = compact ? 4 : items.length;
+        const shown = items.slice(0, maxItems);
+        const moreCount = Math.max(0, items.length - shown.length);
+        const more = moreCount
+          ? `<li class="guide-more">외 ${moreCount.toLocaleString('ko-KR')}개는 전체 보기에서 확인</li>`
+          : '';
+        return `<div class="guide-part"><strong>${escapeHtml(title)}</strong><ul class="guide-list">${shown.map(item => `<li>${formatText(item)}</li>`).join('')}${more}</ul></div>`;
+      }
+      const content = compact ? shorten(raw, 210) : raw;
+      return `<div class="guide-part"><strong>${escapeHtml(title)}</strong><p class="guide-paragraph">${formatText(content)}</p></div>`;
+    }
+
+    function guidanceItems(text) {
+      const normalized = String(text || '')
+        .replace(/\r\n/g, '\n')
+        .replace(/\r/g, '\n')
+        .trim();
+      if (!normalized) return [];
+
+      const lines = normalized
+        .split(/\n+/)
+        .map(line => line.replace(/^\s*[-•·*]\s*/, '').trim())
+        .filter(Boolean);
+      if (lines.length > 1) return lines;
+
+      if (/^\s*[-•·*]/m.test(normalized)) {
+        const bulletItems = normalized
+          .split(/\n?\s*[-•·*]\s+/)
+          .map(item => item.trim())
+          .filter(Boolean);
+        if (bulletItems.length > 1) return bulletItems;
+      }
+
+      const semicolonItems = normalized
+        .split(/[;；]+/)
+        .map(item => item.trim())
+        .filter(Boolean);
+      if (semicolonItems.length > 1) return semicolonItems;
+
+      return [normalized];
+    }
+
+    function combineGuidance(row) {
+      const guide = String(row['복약지도'] || '').trim();
+      const note = String(row['특이사항'] || '').trim();
+      if (guide && note) return `복약지도\n${guide}\n\n특이사항\n${note}`;
+      return guide || note;
+    }
+
+    function hasGuidance(row) {
+      return Boolean(combineGuidance(row));
+    }
+
+    function locationHtml(value) {
+      const text = String(value || '').trim();
+      if (!text) return '';
+      const selected = new Set(parseSpaceTokens(text));
+      const slot = (col, row) => {
+        const key = `${col}-${row}`;
+        const active = selected.has(key) ? ' active' : '';
+        return `<span class="slot${active}" aria-label="${escapeHtml(key)}${active ? ' 선택됨' : ''}">${key}</span>`;
+      };
+      const shelf = startCol => {
+        let cells = '';
+        for (let row = 7; row >= 1; row -= 1) {
+          cells += slot(startCol, row);
+          cells += slot(startCol + 1, row);
+        }
+        return `<div class="shelf"><div class="shelf-title">책장</div><div class="slot-grid">${cells}</div></div>`;
+      };
+      const lower = (label, extra = '') => {
+        const active = selected.has(label) ? ' active' : '';
+        return `<span class="lower-slot ${extra}${active}" aria-label="${escapeHtml(label)}${active ? ' 선택됨' : ''}">${escapeHtml(label)}</span>`;
+      };
+
+      return `
+        <div class="location-visual">
+          <div class="location-head"><span>공간</span><strong>${formatText(text)}</strong></div>
+          <div class="location-map">
+            ${shelf(1)}
+            <div class="aisle">통로</div>
+            ${shelf(3)}
+          </div>
+          <div class="lower-grid">
+            ${lower('책장밑')}
+            ${lower('서랍')}
+            ${lower('가판대', 'stand')}
+          </div>
+        </div>
+      `;
+    }
+
+    function parseSpaceTokens(value) {
+      const text = String(value || '').normalize('NFKC');
+      const tokens = new Set();
+      for (const match of text.matchAll(/([1-4])\s*[-~–—]\s*([1-7])/g)) {
+        tokens.add(`${match[1]}-${match[2]}`);
+      }
+      splitFacet(text).forEach(part => {
+        const compact = part.normalize('NFKC').trim().replace(/\s+/g, '');
+        const exact = compact.match(/^([1-4])[-~–—]?([1-7])$/);
+        if (exact) tokens.add(`${exact[1]}-${exact[2]}`);
+        if (compact === '책장밑' || compact === '책장아래') tokens.add('책장밑');
+        if (compact === '서랍') tokens.add('서랍');
+        if (compact === '가판대') tokens.add('가판대');
+      });
+      if (/책장\s*(밑|아래)/.test(text)) tokens.add('책장밑');
+      if (/서랍/.test(text)) tokens.add('서랍');
+      if (/가판\s*대/.test(text)) tokens.add('가판대');
+      return [...tokens];
+    }
+
+    function firstSpaceValue(value) {
+      const tokens = parseSpaceTokens(value);
+      if (tokens.length) return tokens[0];
+      return splitFacet(value)[0] || String(value || '');
+    }
+
+    function compareSpaceValues(a, b) {
+      const orderA = spaceOrder(a);
+      const orderB = spaceOrder(b);
+      if (orderA !== orderB) return orderA - orderB;
+      return compareText(a, b);
+    }
+
+    function spaceOrder(value) {
+      const text = String(value || '').trim();
+      const match = text.match(/^([1-4])-([1-7])$/);
+      if (match) {
+        const col = Number(match[1]);
+        const row = Number(match[2]);
+        return (col - 1) * 10 + (7 - row);
+      }
+      const lowerOrder = { '책장밑': 100, '서랍': 101, '가판대': 102 };
+      return lowerOrder[text] ?? 999;
+    }
+
+    function formatText(value) {
+      const text = String(value ?? '');
+      if (!text) return '';
+      const escaped = escapeHtml(text).replace(/\n/g, '<br>');
+      const terms = state.tokens
+        .filter(token => !token.negative)
+        .map(token => token.term)
+        .filter(term => term && term.length >= 1)
+        .sort((a, b) => b.length - a.length)
+        .slice(0, 8);
+      if (!terms.length) return escaped;
+      const pattern = terms.map(term => escapeRegExp(escapeHtml(term))).join('|');
+      if (!pattern) return escaped;
+      return escaped.replace(new RegExp(`(${pattern})`, 'gi'), '<mark>$1</mark>');
+    }
+
+    function shorten(value, max = 160) {
+      const text = String(value || '').trim();
+      if (text.length <= max) return text;
+      return `${text.slice(0, max).trim()}…`;
+    }
+
+    function cleanHeader(header) {
+      return String(header || '').replace(/\s+/g, ' ').trim();
+    }
+
+    function resolveColumn(label) {
+      return aliasMap.get(normalizeKey(label)) || '';
+    }
+
+    function normalizeKey(value) {
+      return String(value || '')
+        .normalize('NFKC')
+        .toLowerCase()
+        .replace(/[\s._\-()\[\]{}:;\/\\|,·'"“”‘’]+/g, '')
+        .trim();
+    }
+
+    function normalizeSearchText(value) {
+      return String(value || '')
+        .normalize('NFKC')
+        .toLowerCase()
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function compactText(value) {
+      return String(value || '').replace(/\s+/g, '');
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function escapeRegExp(value) {
+      return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+  })();
+  </script>
+</body>
+</html>
